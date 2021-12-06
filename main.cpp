@@ -863,7 +863,7 @@ int main()
     cout << "================================================= Greetings, traveler ==================================================" << endl;
     cout << "What's your name, traveler?\n";
     string name;
-    cin >> name;
+    getline(cin, name);
     cout << "Okay, " << name << ", it's time to start!\n";
     cout << "At first, you need to select the class which you will play.\n";
     cout << "1 - Warrior. Stats: 100 HP, 20 DMG, 50 ARM, 1 flask\n";
