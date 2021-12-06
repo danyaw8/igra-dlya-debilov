@@ -4,7 +4,10 @@
 #include <bitset>
 using namespace std;
 
-bool QTE()
+int boss_health;
+int boss_shield;
+
+bool QTE(int a)
 {
     srand(time(0));
     string words[] = {"goat", "coat", "boat", "bear", "flux", "floppa", "card", "current", "word", "hdmi"};
@@ -14,7 +17,7 @@ bool QTE()
     string s;
     cin >> s;
     int _end = clock();
-    if(s == words[a] && _end - start <= 4000){
+    if(s == words[a] && _end - start <= a){
         return true;
     }
     else{
@@ -458,7 +461,7 @@ bool game1_lvl_2(string name, Warrior Player, Warrior Enemy, int turn, int upgra
             if(turn == 0){
                 int number = get_number();
                 if(number == 1){
-                    if(QTE()){
+                    if(QTE(4000)){
                         Enemy.takeDamage(Player.m_damage);
                         cout << "\nGood job!\n";
                         Sleep(1300);
@@ -511,7 +514,7 @@ bool game2_lvl_2(string name, Healer Player, Warrior Enemy, int turn, int upgrad
             if(turn == 0){
                 int number = get_number();
                 if(number == 1){
-                    if(QTE()){
+                    if(QTE(4000)){
                     Enemy.takeDamage(Player.m_damage);
                     cout << "\nGood job!\n";
                     Sleep(1300);
@@ -559,7 +562,13 @@ bool game3_lvl_2(string name, Assassin Player, Warrior Enemy, int turn, int upgr
                 int a;
                 cin >> a;
                 if(a == 1){
+                    if(QTE(4000)){
                     Enemy.takeDamage(Player.m_damage);}
+                    else{
+                        cout << "\nYou missed your hit!";
+                        Sleep(1300);
+                    }
+                }
                 else if(a == 2 && Player.m_doubledamage != 0){
                     Enemy.takeDamage(2 * Player.m_damage);
                     Player.m_doubledamage--;
@@ -615,7 +624,7 @@ bool game1_lvl_3(string name, Warrior Player, Boss Enemy, int turn, int upgrade,
             if(turn == 0){
                 int number = get_number();
                 if(number == 1){
-                    if(QTE()){
+                    if(QTE(3000)){
                         if(skill == 2){
                             if(oneshot()) {
                                 cout << "Wow! One-Punch Man moment lol";
@@ -691,7 +700,7 @@ bool game2_lvl_3(string name, Healer Player, Boss Enemy, int turn, int upgrade, 
             if(turn == 0){
                 int number = get_number();
                 if(number == 1){
-                    if(QTE()){
+                    if(QTE(3000)){
                         Enemy.takeDamage(Player.m_damage);
                         cout << "\nGood job!\n";
                         Sleep(1300);
@@ -706,7 +715,7 @@ bool game2_lvl_3(string name, Healer Player, Boss Enemy, int turn, int upgrade, 
                     else Player.heal(Player.m_flasks, hp_heal, 100);
                 }
                 else if(skill == 1 && number == 3 && Player.m_invulnerability != 0){
-                    if(QTE()){
+                    if(QTE(3000)){
                         invicible = true;
                         cout << "\nYou are invulnerability for next 2 hits!\n";
                         Sleep(1300);
@@ -746,6 +755,8 @@ bool game2_lvl_3(string name, Healer Player, Boss Enemy, int turn, int upgrade, 
                 else if(skill == 1 && Player.m_invulnerability == 0) cout << "\nYou can no longer become invulnerable!\n";
                 else if(skill == 2 && Player.m_reincarnation != 0) cout << "You have an extra life!\n";
                 else if(skill == 2 && Player.m_reincarnation == 0) cout << "You have wasted your extra life!\n";
+                boss_health = Enemy.m_health;
+                boss_shield = Enemy.m_shield;
                 Sleep(1000);
                 turn = 0;
             }
@@ -763,12 +774,18 @@ bool game3_lvl_3(string name, Assassin Player, Boss Enemy, int turn, int upgrade
                 int a;
                 cin >> a;
                 if(a == 1){
-                    if(skill == 2){
-                        Enemy.takeDamage(Player.m_damage);
-                        Player.m_health += 10;
+                    if(QTE(3000)){
+                        if(skill == 2){
+                            Enemy.takeDamage(Player.m_damage);
+                            Player.m_health += 10;
+                        }
+                        else{
+                            Enemy.takeDamage(Player.m_damage);
+                        }
                     }
                     else{
-                        Enemy.takeDamage(Player.m_damage);
+                        cout << "\nYou missed your hit!";
+                        Sleep(1300);
                     }
                 }
                 else if(a == 2 && Player.m_doubledamage != 0){
@@ -828,7 +845,7 @@ int main()
     cout << "At first, you need to select the class which you will play.\n";
     cout << "1 - Warrior. Stats: 100 HP, 20 DMG, 50 ARM, 1 flask\n";
     cout << "2 - Healer. Stats: 100 HP, 20 DMG, 20 ARM, 4 flasks\n";
-    cout << "3 - Assassin. Stats: 50 HP, 30 DMG, 10 ARM and opportunity to deal double damage\n";
+    cout << "3 - Assassin. Stats: 70 HP, 30 DMG, 10 ARM and opportunity to deal double damage\n";
     int number;
     cin >> number;
     if(number == 1)
@@ -947,6 +964,7 @@ int main()
                 Boss Enemy_Boss;
                 Enemy_Boss.setParameter("Boss", 150, 20, 50, 50);
                 cout << "Boss has a shield that absorbs damage! You need to destroy shield before you can kill him!";
+                Sleep(1300);
                 move_doneWarriorBoss(name, Player, Enemy_Boss);
                 cout << "\nYour move! Show your best! Type \"1\" if you want to attack or type \"2\" if you want to heal\n";
                 turn = 0;
@@ -1089,6 +1107,7 @@ int main()
                 Boss Enemy_Boss;
                 Enemy_Boss.setParameter("Boss", 150, 20, 50, 50);
                 cout << "Boss has a shield that absorbs damage! You need to destroy shield before you can kill him!";
+                Sleep(1300);
                 move_doneHealerBoss(name, Player, Enemy_Boss);
                 cout << "\nYour move! Show your best! Type \"1\" if you want to attack or type \"2\" if you want to heal\n";
                 turn = 0;
@@ -1097,7 +1116,7 @@ int main()
                     system("cls");
                     cout << "\nCongratulations! You beat the game!\n";
                 }
-                else if(!game2_lvl_3(name, Player, Enemy_Boss, turn, upgrade, skill, hp_heal, invicible) && Player.m_reincarnation != 0){
+                else if(Player.m_reincarnation == 1){
                     system("cls");
                     cout << "Arthas moment\nTry harder this time!\n";
                     Sleep(1300);
@@ -1105,8 +1124,6 @@ int main()
                     else if(upgrade == 2) Player.setParameter(name, 100, 15, 70, 4);
                     else if(upgrade == 3) Player.setParameter(name, 100, 15, 20, 4);
                     Player.m_reincarnation--;
-                    int boss_health = Enemy_Boss.m_health;
-                    int boss_shield = Enemy_Boss.m_shield;
                     Enemy_Boss.setParameter("Boss", boss_health, 20, 50, boss_shield);
                     move_doneHealerBoss(name, Player, Enemy_Boss);
                     cout << "\nYour move! Show your best! Type \"1\" if you want to attack or type \"2\" if you want to heal\n";
@@ -1136,7 +1153,7 @@ int main()
     else if(number == 3)
     {
         Assassin Player;
-        Player.setParameter(name, 50, 30, 10, 1);
+        Player.setParameter(name, 70, 30, 10, 1);
         cout << "Good choice! Now let's begin our journey!\n";
         Sleep(1000);
         system("cls");
@@ -1163,16 +1180,16 @@ int main()
             bool prize_taken = false;
             while(!prize_taken){
                 if(upgrade == 1){
-                    Player.setParameter(name, 90, 30, 10, 1);
+                    Player.setParameter(name, 110, 30, 10, 1);
                     prize_taken = true;
                 }
                 else if(upgrade == 2){
-                    Player.setParameter(name, 50, 30, 10, 1);
+                    Player.setParameter(name, 70, 30, 10, 1);
                     Player.m_evasion = 20;
                     prize_taken = true;
                 }
                 else if(upgrade == 3){
-                    Player.setParameter(name, 50, 30, 10, 2);
+                    Player.setParameter(name, 70, 30, 10, 2);
                     prize_taken = true;
                 }
                 else{
@@ -1199,42 +1216,42 @@ int main()
                 int &skill = reward_2;
                 while(!prize_taken){
                     if(skill == 1 && upgrade == 1){
-                        Player.setParameter(name, 90, 30, 10, 1);
+                        Player.setParameter(name, 110, 30, 10, 1);
                         Player.m_reduction = 1;
                         prize_taken = true;
                     }
                     else if(skill == 1 && upgrade == 2){
-                        Player.setParameter(name, 50, 30, 10, 1);
+                        Player.setParameter(name, 70, 30, 10, 1);
                         Player.m_reduction = 1;
                         prize_taken = true;
                     }
                      else if(skill == 1 && upgrade == 3){
-                        Player.setParameter(name, 50, 30, 10, 2);
+                        Player.setParameter(name, 70, 30, 10, 2);
                         Player.m_reduction = 1;
                         prize_taken = true;
                     }
                     if(skill == 2 && upgrade == 1){
-                        Player.setParameter(name, 90, 30, 10, 1);
+                        Player.setParameter(name, 110, 30, 10, 1);
                         prize_taken = true;
                     }
                     else if(skill == 2 && upgrade == 2){
-                        Player.setParameter(name, 50, 30, 10, 1);
+                        Player.setParameter(name, 70, 30, 10, 1);
                         prize_taken = true;
                     }
                     else if(skill == 2 && upgrade == 3){
-                        Player.setParameter(name, 50, 30, 10, 1);
+                        Player.setParameter(name, 70, 30, 10, 1);
                         prize_taken = true;
                     }
                     else if(skill == 3 && upgrade == 1){
-                        Player.setParameter(name, 105, 45, 25, 1);
+                        Player.setParameter(name, 125, 45, 25, 1);
                         prize_taken = true;
                     }
                     else if(skill == 3 && upgrade == 2){
-                        Player.setParameter(name, 65, 45, 25, 1);
+                        Player.setParameter(name, 85, 45, 25, 1);
                         prize_taken = true;
                     }
                     else if(skill == 3 && upgrade == 3){
-                        Player.setParameter(name, 65, 45, 25, 2);
+                        Player.setParameter(name, 85, 45, 25, 2);
                         prize_taken = true;
                     }
                     else{
@@ -1250,6 +1267,7 @@ int main()
                 Boss Enemy_Boss;
                 Enemy_Boss.setParameter("Boss", 150, 20, 50, 50);
                 cout << "Boss has a shield that absorbs damage! You need to destroy shield before you can kill him!";
+                Sleep(1300);
                 move_doneAssassinBoss(name, Player, Enemy_Boss);
                 cout << "\nYour move! Show your best! Type \"1\" if you want to attack or type \"2\" if you want to heal\n";
                 turn = 0;
